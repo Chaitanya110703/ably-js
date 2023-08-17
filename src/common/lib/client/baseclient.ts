@@ -14,6 +14,7 @@ import { ModulesMap } from './modulesmap';
 import { Rest } from './rest';
 import { IUntypedCryptoStatic } from 'common/types/ICryptoStatic';
 import { throwMissingModuleError } from '../util/utils';
+import { MsgPack } from 'common/types/msgpack';
 
 /**
  `BaseClient` acts as the base class for all of the client classes exported by the SDK. It is an implementation detail and this class is not advertised publicly.
@@ -30,7 +31,7 @@ class BaseClient {
 
   private readonly _rest: Rest | null;
   readonly _Crypto: IUntypedCryptoStatic | null;
-  readonly _MsgPack = Platform.Config.msgpack;
+  readonly _MsgPack: MsgPack | null;
 
   constructor(options: ClientOptions | string, modules: ModulesMap) {
     if (!options) {
@@ -47,7 +48,8 @@ class BaseClient {
       'initialized with clientOptions ' + Platform.Config.inspect(options)
     );
 
-    const normalOptions = (this.options = Defaults.normaliseOptions(optionsObj));
+    this._MsgPack = modules.MsgPack ?? null;
+    const normalOptions = (this.options = Defaults.normaliseOptions(optionsObj, this._MsgPack));
 
     /* process options */
     if (normalOptions.key) {

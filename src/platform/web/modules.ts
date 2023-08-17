@@ -40,5 +40,6 @@ if (Platform.Config.noUpgrade) {
 
 export * from './modules/crypto';
 export * from './modules/message';
+export * from './modules/msgpack';
 export { Rest } from '../../common/lib/client/rest';
 export { BaseRest, BaseRealtime };

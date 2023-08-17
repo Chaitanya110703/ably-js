@@ -23,6 +23,10 @@ Platform.Config = Config;
 Platform.Transports = Transports;
 Platform.WebStorage = WebStorage;
 
+for (const clientClass of [DefaultRest, DefaultRealtime]) {
+  clientClass._MsgPack = msgpack;
+}
+
 Logger.initLogHandlers();
 
 Platform.Defaults = getDefaults(PlatformDefaults);

@@ -14,6 +14,7 @@ import Transports from './lib/transport';
 import Logger from '../../common/lib/util/logger';
 import { getDefaults } from '../../common/lib/util/defaults';
 import PlatformDefaults from './lib/util/defaults';
+import msgpack = require('@ably/msgpack-js');
 
 const Crypto = createCryptoClass(BufferUtils);
 
@@ -26,6 +27,7 @@ Platform.WebStorage = null;
 
 for (const clientClass of [DefaultRest, DefaultRealtime]) {
   clientClass.Crypto = Crypto;
+  clientClass._MsgPack = msgpack;
 }
 
 Logger.initLogHandlers();

@@ -28,6 +28,7 @@ Platform.WebStorage = WebStorage;
 
 for (const clientClass of [DefaultRest, DefaultRealtime]) {
   clientClass.Crypto = Crypto;
+  clientClass._MsgPack = msgpack;
 }
 
 Logger.initLogHandlers();
