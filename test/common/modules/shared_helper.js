@@ -245,6 +245,10 @@ define([
     expect(json1 === json2, 'JSON data contents mismatch.').to.be.ok;
   }
 
+  function randomString() {
+    return Math.random().toString().slice(2);
+  }
+
   var exports = {
     setupApp: testAppModule.setup,
     tearDownApp: testAppModule.tearDown,
@@ -278,6 +282,7 @@ define([
     arrFilter: arrFilter,
     whenPromiseSettles: whenPromiseSettles,
     testMessageEquality: testMessageEquality,
+    randomString: randomString,
   };
 
   if (typeof window !== 'undefined') {
