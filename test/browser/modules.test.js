@@ -11,6 +11,8 @@ import {
   Crypto,
   MsgPack,
   RealtimePresence,
+  decodePresenceMessage,
+  decodePresenceMessages,
 } from '../../build/modules/index.js';
 
 describe('browser/modules', function () {
@@ -346,6 +348,39 @@ describe('browser/modules', function () {
 
         const rxPresenceMessage = await rxPresenceMessagePromise;
         expect(rxPresenceMessage.clientId).to.equal(txClientId);
+      });
+    });
+  });
+
+  describe('PresenceMessage standalone functions', () => {
+    describe('decodePresenceMessage', () => {
+      it('decodes a presence message’s data', async () => {
+        const buffer = BufferUtils.utf8Encode('foo');
+        const encodedMessage = { data: BufferUtils.base64Encode(buffer), encoding: 'base64' };
+
+        const decodedMessage = await decodePresenceMessage(encodedMessage);
+
+        expect(BufferUtils.areBuffersEqual(decodedMessage.data, buffer)).to.be.true;
+        expect(decodedMessage.encoding).to.be.null;
+      });
+    });
+
+    describe('decodeMessages', () => {
+      it('decodes presence messages’ data', async () => {
+        const buffers = ['foo', 'bar'].map((data) => BufferUtils.utf8Encode(data));
+        const encodedMessages = buffers.map((buffer) => ({
+          data: BufferUtils.base64Encode(buffer),
+          encoding: 'base64',
+        }));
+
+        const decodedMessages = await decodePresenceMessages(encodedMessages);
+
+        for (let i = 0; i < decodedMessages.length; i++) {
+          const decodedMessage = decodedMessages[i];
+
+          expect(BufferUtils.areBuffersEqual(decodedMessage.data, buffers[i])).to.be.true;
+          expect(decodedMessage.encoding).to.be.null;
+        }
       });
     });
   });

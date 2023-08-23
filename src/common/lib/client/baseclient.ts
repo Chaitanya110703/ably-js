@@ -9,7 +9,6 @@ import { IHttp, RequestParams } from '../../types/http';
 import ClientOptions, { NormalisedClientOptions } from '../../types/ClientOptions';
 
 import Platform from '../../platform';
-import PresenceMessage from '../types/presencemessage';
 import { ModulesMap } from './modulesmap';
 import { Rest } from './rest';
 import { IUntypedCryptoStatic } from 'common/types/ICryptoStatic';
@@ -133,7 +132,6 @@ class BaseClient {
   }
 
   static Platform = Platform;
-  static PresenceMessage = PresenceMessage;
 }
 
 export default BaseClient;

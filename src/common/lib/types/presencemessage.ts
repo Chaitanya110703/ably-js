@@ -9,6 +9,29 @@ function toActionValue(actionString: string) {
   return PresenceMessage.Actions.indexOf(actionString);
 }
 
+export async function fromEncoded(encoded: unknown, options?: API.Types.ChannelOptions): Promise<PresenceMessage> {
+  const msg = PresenceMessage.fromValues(encoded as PresenceMessage | Record<string, unknown>, true);
+  /* if decoding fails at any point, catch and return the message decoded to
+   * the fullest extent possible */
+  try {
+    await PresenceMessage.decode(msg, options ?? {});
+  } catch (e) {
+    Logger.logAction(Logger.LOG_ERROR, 'PresenceMessage.fromEncoded()', (e as Error).toString());
+  }
+  return msg;
+}
+
+export async function fromEncodedArray(
+  encodedArray: unknown[],
+  options?: API.Types.ChannelOptions
+): Promise<PresenceMessage[]> {
+  return Promise.all(
+    encodedArray.map(function (encoded) {
+      return PresenceMessage.fromEncoded(encoded, options);
+    })
+  );
+}
+
 class PresenceMessage {
   action?: string | number;
   id?: string;
@@ -140,26 +163,14 @@ class PresenceMessage {
   }
 
   static async fromEncoded(encoded: unknown, options?: API.Types.ChannelOptions): Promise<PresenceMessage> {
-    const msg = PresenceMessage.fromValues(encoded as PresenceMessage | Record<string, unknown>, true);
-    /* if decoding fails at any point, catch and return the message decoded to
-     * the fullest extent possible */
-    try {
-      await PresenceMessage.decode(msg, options ?? {});
-    } catch (e) {
-      Logger.logAction(Logger.LOG_ERROR, 'PresenceMessage.fromEncoded()', (e as Error).toString());
-    }
-    return msg;
+    return fromEncoded(encoded, options);
   }
 
   static async fromEncodedArray(
     encodedArray: unknown[],
     options?: API.Types.ChannelOptions
   ): Promise<PresenceMessage[]> {
-    return Promise.all(
-      encodedArray.map(function (encoded) {
-        return PresenceMessage.fromEncoded(encoded, options);
-      })
-    );
+    return fromEncodedArray(encodedArray, options);
   }
 
   static getMessagesSize = Message.getMessagesSize;
