@@ -8,7 +8,7 @@ import { StandardCallback } from '../../types/utils';
 import { IHttp, RequestParams } from '../../types/http';
 import ClientOptions, { NormalisedClientOptions } from '../../types/ClientOptions';
 
-import Platform from '../../platform';
+import Platform, { HTTPRequestImplementations, HTTPRequestMechanismNames } from '../../platform';
 import { ModulesMap } from './modulesmap';
 import { Rest } from './rest';
 import { IUntypedCryptoStatic } from 'common/types/ICryptoStatic';
@@ -31,8 +31,12 @@ class BaseClient {
   private readonly _rest: Rest | null;
   readonly _Crypto: IUntypedCryptoStatic | null;
   readonly _MsgPack: MsgPack | null;
+  // Extra HTTP request implementations available to this client, in addition to those directly accessed in our HTTP code
+  readonly _additionalHTTPRequestImplementations: HTTPRequestImplementations;
 
   constructor(options: ClientOptions | string, modules: ModulesMap) {
+    this._additionalHTTPRequestImplementations = BaseClient.httpRequestImplementationsFromModules(modules);
+
     if (!options) {
       const msg = 'no options provided';
       Logger.logAction(Logger.LOG_ERROR, 'BaseClient()', msg);
@@ -83,6 +87,20 @@ class BaseClient {
 
     this._rest = modules.Rest ? new modules.Rest(this) : null;
     this._Crypto = modules.Crypto ?? null;
+  }
+
+  private static httpRequestImplementationsFromModules(modules: ModulesMap) {
+    const implementations: HTTPRequestImplementations = {};
+
+    if (modules.XHRRequest) {
+      implementations[HTTPRequestMechanismNames.XHR] = modules.XHRRequest;
+    }
+
+    if (modules.FetchRequest) {
+      implementations[HTTPRequestMechanismNames.Fetch] = modules.FetchRequest;
+    }
+
+    return implementations;
   }
 
   private get rest(): Rest {

@@ -44,5 +44,6 @@ export * from './modules/presencemessage';
 export * from './modules/msgpack';
 export * from './modules/realtimepresence';
 export * from './modules/transports';
+export * from './modules/http';
 export { Rest } from '../../common/lib/client/rest';
 export { BaseRest, BaseRealtime };

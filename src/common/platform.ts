@@ -15,6 +15,15 @@ type ToBufferOutput = WebBufferUtils.ToBufferOutput | NodeBufferUtils.ToBufferOu
 
 export type TransportImplementations = Partial<Record<TransportName, TransportInitialiser>>;
 
+export namespace HTTPRequestMechanismNames {
+  export const XHR = 'xhr' as const;
+  export const Fetch = 'fetch' as const;
+}
+
+export type HTTPRequestMechanismName = typeof HTTPRequestMechanismNames.XHR | typeof HTTPRequestMechanismNames.Fetch;
+
+export type HTTPRequestImplementations = Partial<Record<HTTPRequestMechanismName, IHttp>>;
+
 export default class Platform {
   static Config: IPlatformConfig;
   /*
