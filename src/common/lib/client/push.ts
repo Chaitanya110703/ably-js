@@ -151,9 +151,9 @@ class DeviceRegistrations {
     Utils.mixin(headers, client.options.headers);
 
     new PaginatedResource(client, '/push/deviceRegistrations', headers, envelope, async function (
-      body: any,
-      headers: Record<string, string>,
-      unpacked?: boolean
+      body,
+      headers,
+      unpacked
     ) {
       return DeviceDetails.fromResponseBody(body, client._MsgPack, unpacked ? undefined : format);
     }).get(params, callback);
@@ -269,9 +269,9 @@ class ChannelSubscriptions {
     Utils.mixin(headers, client.options.headers);
 
     new PaginatedResource(client, '/push/channelSubscriptions', headers, envelope, async function (
-      body: any,
-      headers: Record<string, string>,
-      unpacked?: boolean
+      body,
+      headers,
+      unpacked
     ) {
       return PushChannelSubscription.fromResponseBody(body, client._MsgPack, unpacked ? undefined : format);
     }).get(params, callback);
@@ -310,11 +310,7 @@ class ChannelSubscriptions {
 
     if (client.options.pushFullWait) Utils.mixin(params, { fullWait: 'true' });
 
-    new PaginatedResource(client, '/push/channels', headers, envelope, async function (
-      body: unknown,
-      headers: Record<string, string>,
-      unpacked?: boolean
-    ) {
+    new PaginatedResource(client, '/push/channels', headers, envelope, async function (body, headers, unpacked) {
       const parsedBody = (
         !unpacked && format ? Utils.decodeBody(body, client._MsgPack, format) : body
       ) as Array<string>;

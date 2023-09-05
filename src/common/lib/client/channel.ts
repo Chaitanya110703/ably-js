@@ -98,9 +98,9 @@ class Channel extends EventEmitter {
 
     const options = this.channelOptions;
     new PaginatedResource(client, this.basePath + '/messages', headers, envelope, async function (
-      body: any,
-      headers: Record<string, string>,
-      unpacked?: boolean
+      body,
+      headers,
+      unpacked
     ) {
       return await Message.fromResponseBody(body, options, client._MsgPack, unpacked ? undefined : format);
     }).get(params as Record<string, unknown>, callback);

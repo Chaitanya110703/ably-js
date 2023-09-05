@@ -245,35 +245,21 @@ class Resource {
         );
       }
 
-      client.http.do(
-        method,
-        client,
-        path,
-        headers,
-        body,
-        params,
-        function (
-          err: ErrorInfo | ErrnoException | null | undefined,
-          res: any,
-          headers: Record<string, string>,
-          unpacked?: boolean,
-          statusCode?: number
-        ) {
-          if (err && Auth.isTokenErr(err as ErrorInfo)) {
-            /* token has expired, so get a new one */
-            client.auth.authorize(null, null, function (err: ErrorInfo) {
-              if (err) {
-                callback(err);
-                return;
-              }
-              /* retry ... */
-              withAuthDetails(client, headers, params, callback, doRequest);
-            });
-            return;
-          }
-          callback(err as ErrorInfo, res, headers, unpacked, statusCode);
+      client.http.do(method, client, path, headers, body, params, function (err, res, headers, unpacked, statusCode) {
+        if (err && Auth.isTokenErr(err as ErrorInfo)) {
+          /* token has expired, so get a new one */
+          client.auth.authorize(null, null, function (err: ErrorInfo) {
+            if (err) {
+              callback(err);
+              return;
+            }
+            /* retry ... */
+            withAuthDetails(client, headers, params, callback, doRequest);
+          });
+          return;
         }
-      );
+        callback(err as ErrorInfo, res as T | undefined, headers, unpacked, statusCode);
+      });
     }
 
     withAuthDetails(client, headers, params, callback, doRequest);
