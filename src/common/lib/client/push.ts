@@ -155,7 +155,11 @@ class DeviceRegistrations {
       headers,
       unpacked
     ) {
-      return DeviceDetails.fromResponseBody(body, client._MsgPack, unpacked ? undefined : format);
+      return DeviceDetails.fromResponseBody(
+        body as Partial<Record<string, unknown>>[],
+        client._MsgPack,
+        unpacked ? undefined : format
+      );
     }).get(params, callback);
   }
 
@@ -273,7 +277,11 @@ class ChannelSubscriptions {
       headers,
       unpacked
     ) {
-      return PushChannelSubscription.fromResponseBody(body, client._MsgPack, unpacked ? undefined : format);
+      return PushChannelSubscription.fromResponseBody(
+        body as Record<string, unknown>[],
+        client._MsgPack,
+        unpacked ? undefined : format
+      );
     }).get(params, callback);
   }
 

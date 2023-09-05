@@ -17,6 +17,16 @@ function getAblyError(responseBody: unknown, headers: Headers) {
   }
 }
 
+function convertHeaders(headers: Headers) {
+  const result: Partial<Record<string, string>> = {};
+
+  headers.forEach((value, key) => {
+    result[key] = value;
+  });
+
+  return result;
+}
+
 export default function fetchRequest(
   method: HttpMethods,
   client: BaseClient | null,
@@ -64,6 +74,7 @@ export default function fetchRequest(
       }
       prom.then((body) => {
         const packed = !!contentType && contentType.indexOf('application/x-msgpack') === -1;
+        const headers = convertHeaders(res.headers);
         if (!res.ok) {
           const err =
             getAblyError(body, res.headers) ||
@@ -72,9 +83,9 @@ export default function fetchRequest(
               null,
               res.status
             );
-          callback(err, body, res.headers, packed, res.status);
+          callback(err, body, headers, packed, res.status);
         } else {
-          callback(null, body, res.headers, packed, res.status);
+          callback(null, body, headers, packed, res.status);
         }
       });
     })

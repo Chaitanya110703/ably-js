@@ -102,7 +102,7 @@ class Channel extends EventEmitter {
       headers,
       unpacked
     ) {
-      return await Message.fromResponseBody(body, options, client._MsgPack, unpacked ? undefined : format);
+      return await Message.fromResponseBody(body as Message[], options, client._MsgPack, unpacked ? undefined : format);
     }).get(params as Record<string, unknown>, callback);
   }
 

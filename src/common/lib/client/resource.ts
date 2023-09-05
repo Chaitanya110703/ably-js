@@ -10,7 +10,7 @@ import { MsgPack } from 'common/types/msgpack';
 
 function withAuthDetails(
   client: BaseClient,
-  headers: Record<string, string>,
+  headers: Partial<Record<string, string | string[]>> | undefined,
   params: Record<string, any>,
   errCallback: Function,
   opCallback: Function
@@ -130,7 +130,7 @@ function logResponseHandler<T>(
 export type ResourceCallback<T = unknown> = (
   err: IPartialErrorInfo | null,
   body?: T,
-  headers?: Record<string, string>,
+  headers?: Partial<Record<string, string | string[]>>,
   unpacked?: boolean,
   statusCode?: number
 ) => void;

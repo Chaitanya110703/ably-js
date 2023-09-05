@@ -74,7 +74,7 @@ class DeviceDetails {
   static toRequestBody = Utils.encodeBody;
 
   static fromResponseBody(
-    body: Array<Record<string, unknown>> | Record<string, unknown>,
+    body: Array<Partial<Record<string, unknown>>> | Partial<Record<string, unknown>>,
     MsgPack: MsgPack | null,
     format?: Utils.Format
   ): DeviceDetails | DeviceDetails[] {
